@@ -9,7 +9,16 @@ import { startSpinner } from "../utils/spinner.mjs";
 //const WEB_DIR = path.resolve("web");
 //const DIST_DIR = path.resolve("web/dist");
 const PRESETS = ["mobile", "desktop"];
-const PORT = Number(process.env.TEST_PORT);
+const PORT_RAW = process.env.TEST_PORT;
+if (!PORT_RAW) {
+  console.error("Missing TEST_PORT env var. Example: TEST_PORT=3000");
+  process.exit(1);
+}
+const PORT = Number(PORT_RAW);
+if (!Number.isFinite(PORT) || PORT <= 0) {
+  console.error(`Invalid TEST_PORT: ${PORT_RAW}`);
+  process.exit(1);
+}
 const ROUTES = (
   process.env.LH_ROUTES ? process.env.LH_ROUTES.split(",") : defaultRoutes
 )
